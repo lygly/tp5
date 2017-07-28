@@ -133,7 +133,7 @@ class Good extends Controller
       $data['status'] = input('status');
       $data['reorder'] = input('reorder');
       //$data['imagepath'] = input('file');
-      $data['text'] = input('editorValue');
+      $data['text'] = input('text');
       $tid = explode(',', input('tid'));
       $data['tid'] = $tid[0];
       $data['tpid'] = $tid[1];
@@ -145,5 +145,60 @@ class Good extends Controller
       }else{
           $this->error('失败');
       }
+    }
+    //编辑产品
+    public function editGood(){
+        $id = input('id');
+       // var_dump($id);
+        //产品类别
+        $GoodsType = new GoodsType();
+        $Cate = $GoodsType->order('path')->select();
+        foreach ($Cate as $k=>$v){
+            $Cate[$k]['name']=str_repeat("|--",$v['level']).$v['name'];
+        }
+        //产品详情
+        $data = Goods::get($id);
+        $this->assign('cate',$Cate);
+        $this->assign('good',$data);
+       return $this->fetch('product_edit');
+    }
+    //更新产品
+    public function updateGoods(){
+      //  var_dump(input());
+        $id = input('id');
+        $data = Goods::get($id);
+
+
+        $data['goodsname'] = input('goodsname');
+        $data['attributes'] = input('attributes');
+        $data['number'] = input('number');
+        $data['barcode'] = input('barcode');
+        $data['unit'] = input('unit');
+        $data['curprice'] = input('curprice');
+        $data['oriprice'] = input('oriprice');
+        $data['cosprice'] = input('cosprice');
+        $data['inventory'] = input('inventory');
+        $data['already'] = input('already');
+        $data['freight'] = input('freight');
+        $data['status'] = input('status');
+        $data['reorder'] = input('reorder');
+        //$data['imagepath'] = input('file');
+        $data['text'] = input('text');
+        $tid = explode(',', input('tid'));
+        $data['tid'] = $tid[0];
+        $data['tpid'] = $tid[1];
+
+        $re = $data->save();
+        if($re){
+            $this->success('成功','Good/goods');
+        }else{
+            $this->error('失败');
+        }
+    }
+    //删除产品
+    public function goodDel(){
+        $id = input('id');
+        $data = Goods::get($id);
+        $data->delete();
     }
 }
