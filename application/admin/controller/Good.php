@@ -240,7 +240,6 @@ class Good extends Controller
         }
     }
 
-
     //商品图片删除
     public function product_del_images(){
         $GoodFile = new GoodsFiles();
